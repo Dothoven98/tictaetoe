@@ -21,9 +21,9 @@ object Game {
     }
 
     fun findMaxWinCountPos(winCountMatrix: Array<Array<Int>>,duplicatedMatrix:Array<Array<Int>>):Pair<Int,Int>{
-        var x = 1
-        var y = 1
-        var maxWin =-1
+        var x = 10
+        var y = 10
+        var maxWin =100000000
 
 
         for(i in 0..2){
@@ -31,7 +31,7 @@ object Game {
                 if(checkElementIsEmpty(duplicatedMatrix,i,j)) {
                     val nowWin = winCountMatrix[i][j]
 
-                    if (nowWin > maxWin) {
+                    if (nowWin < maxWin) {
                         maxWin = nowWin
 
                         x = i
@@ -48,6 +48,7 @@ object Game {
         var duplicatedMatrix:Array<Array<Int>>
         duplicatedMatrix = copyMatrix(matrix)
         var cpuWinCounter = arrayOf(arrayOf(0,0,0), arrayOf(0,0,0), arrayOf(0,0,0))
+        Log.d("myTag","-------------------------")
         for(i in 0..2){
             for(j in 0..2){
 
@@ -57,6 +58,7 @@ object Game {
                     val tempWinCount = calculateComputerWinCount(duplicatedMatrix, calculateEmptyElementCount(duplicatedMatrix))
                     cpuWinCounter[i][j] = tempWinCount
                     Log.d("myTag",i.toString()+" "+j.toString()+" "+tempWinCount.toString())
+                    duplicatedMatrix[i][j] = 0
                 }
             }
         }
@@ -70,9 +72,9 @@ object Game {
 
     }
     fun calculateComputerWinCount(matrix: Array<Array<Int>>,restPos:Int,):Int{
+
         var duplicatedMatrix:Array<Array<Int>>
         duplicatedMatrix = copyMatrix(matrix)
-
 
 
         var returnValue =0
@@ -81,27 +83,38 @@ object Game {
         for (i in 0..2) {
             for (j in 0..2) {
 
-                if(checkWhoWin(duplicatedMatrix)==0){
+                if(checkWhoWin(matrix)==0){
                     if(restPos==0){
                         return 0
                     }
                     else{
-                        if(restPos%2==0){
-                            duplicatedMatrix[i][j]=1
-                            returnValue += calculateComputerWinCount(duplicatedMatrix,restPos-1)
-                        }
-                        else{
-                            duplicatedMatrix[i][j]=2
-                            returnValue += calculateComputerWinCount(duplicatedMatrix,restPos-1)
+
+                        if(checkElementIsEmpty(matrix,i,j)) {
+
+                            if (restPos % 2 == 0) {
+                                duplicatedMatrix[i][j] = 2
+                                returnValue += calculateComputerWinCount(
+                                    duplicatedMatrix,
+                                    restPos - 1
+                                )
+
+                            } else {
+                                duplicatedMatrix[i][j] = 1
+                                returnValue += calculateComputerWinCount(
+                                    duplicatedMatrix,
+                                    restPos - 1
+                                )
+                            }
+                            duplicatedMatrix[i][j] = 0
                         }
                     }
 
                 }
-                else if(checkWhoWin(duplicatedMatrix)==1){
-                    return 0
+                else if(checkWhoWin(matrix)==1){
+                    return factorial(restPos+1)
                 }
                 else{
-                    return factorial(restPos)
+                    return 0
                 }
 
 
