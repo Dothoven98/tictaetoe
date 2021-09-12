@@ -43,14 +43,16 @@ class MainActivity : AppCompatActivity() {
         for(i in 0..2){
             for(j in 0..2){
                 buttonArray[i][j].setOnClickListener {
-                    Game.playerPut(i,j)
+                    if(Game.checkElementIsEmpty(Game.matrix,i,j)&&Game.checkWhoWin(Game.matrix)==0) {
+                        Game.playerPut(i, j)
 
-                    val result = Game.checkWhoWin(Game.matrix)
-                    if(result==0){
-                        Game.computerPut()
+
+                        if (Game.checkWhoWin(Game.matrix) == 0) {
+                            Game.computerPut()
+                        }
+
+                        setMatrixToUI(Game.matrix)
                     }
-
-                    setMatrixToUI(Game.matrix)
                 }
             }
         }
